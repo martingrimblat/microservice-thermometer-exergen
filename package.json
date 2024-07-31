@@ -1,0 +1,21 @@
+{
+  "name": "package.json",
+  "version": "1.0.0",
+  "description": "temp",
+  "main": "micro.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@serialport/binding-mock": "^10.2.2",
+    "@serialport/parser-readline": "^12.0.0",
+    "@serialport/stream": "^10.2.2",
+    "serialport": "^9.0.4",
+    "ws": "^8.16.0",
+    "wait-queue": "^1.1.4",
+    "dotenv": "^8.2.0"
+  }
+}
