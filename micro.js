@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 
 require('dotenv').config()
+const MOCK = process.env.MOCK
 const SerialPort = require('serialport');
-const ws = require('./core')
+const fs = require("fs");
+const {start, startMock} = require('./server')
 const logger = require('./logger');
 const RECONNECT_TIMEOUT = 5000;
 const options = {
@@ -25,7 +27,7 @@ const connect = () =>{
         else{
             console.log('Serial port opened');
             logger.log('Listening ');
-            ws.start(port);
+            start(port);
         }
         
     });
@@ -51,4 +53,10 @@ const reconnect = () => {
     }, RECONNECT_TIMEOUT);
 };
 
-connect()
+if (MOCK === 'true') {
+    logger.log('Start with MOCK file')
+    let mockData = fs.readFileSync('./mock/data-temp.bin')
+    startMock(mockData)
+} else {
+    connect()
+}

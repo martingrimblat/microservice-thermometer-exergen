@@ -1,9 +1,6 @@
-const WebSocket = require('ws');
 const logger = require('./logger');
 let messageBuffer = Buffer.alloc(0);
 
-const url = 'ws://localhost:5003';
-const ws = new WebSocket(url);
 const packet_LENGTH = 32;
 
 const verifyChecksum = (packet) => {
@@ -19,10 +16,11 @@ const verifyChecksum = (packet) => {
 
 const processData = (data) => {
     let parsedData = parseData(data)
-
-    if (parsedData) {
-        ws.send(parsedData)
-    }
+    
+    return parsedData
+    // if (parsedData) {
+    //     ws.send(parsedData)
+    // }
 }
 
 const parseData = (data) => {
@@ -61,10 +59,11 @@ const parseData = (data) => {
             console.log('Display Temperature:', realTemperature);
             console.log('Reference:', referenceSpot); // no me retorna bien el sitio de referencia (arterial u oral)
             
-            const parsedData = {
-                temperature: realTemperature,
-                reference: referenceSpot
-            }
+            let responseBuffer = Buffer.alloc(9)
+            responseBuffer.writeDoubleBE(realTemperature, 0)
+            responseBuffer.writeUint8(reference, 7)
+            // Buffer.concat([responseBuffer, reference])
+            const parsedData = responseBuffer
 
             return parsedData
 
@@ -73,10 +72,6 @@ const parseData = (data) => {
         }
     }
 }
-
-ws.on('error', function error(err) {
-    logger.error('Error en la conexión WebSocket:', err.message);
-});
 
 module.exports = {
     processData
